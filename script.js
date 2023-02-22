@@ -1,3 +1,5 @@
+let div_zero = "I'm afraid I can't do that, user.";
+
 function add(a,b){
     return a+b;
 }
@@ -11,6 +13,9 @@ function multiply(a,b){
 }
 
 function divide(a,b) {
+    if(b === 0){
+        return div_zero;
+    }
     return a/b;
 }
 
