@@ -7,6 +7,7 @@ let calc = {
     "history": "",
 }
 let right_op_trigger = false;
+let display_text = document.querySelector("#display");
 
 //Notes for self, right_trigger is switched to true when an operator is pressed. 
 
@@ -30,43 +31,7 @@ function divide(a,b) {
     return a/b;
 }
 
-function updateHelper(e){
-    let display_text = document.querySelector("#display");
-    if(this.value === "AC" || this.value === "C"){
-        calc.display = "";
-        calc.l_Op = "";
-        calc.r_Op = "";
-        calc.operator = "";
-        calc.history = "";
-        display_text.textContent  = calc.display;
-        right_op_trigger = false;
-        return;
-    }
-    else if(this.classList.contains("operator")){
-        calc.display = "";
-        calc.operator = this.value;
-        right_op_trigger = true;
-        return;
-    }
-    else if(this.value === "="){
-        let result = operate();
-        display_text.textContent = result;
-    }
-    else{
-        if(right_op_trigger){
-            calc.r_Op += this.value;
-            calc.display = calc.r_Op;
-            display_text.textContent = calc.display;
-            return;
-        }
-        calc.l_Op += this.value;
-        calc.display = calc.l_Op;
-        display_text.textContent = calc.display;
-        return;
-    }
-}
-
-function operate(){
+function evaluate(){
     let result;
     console.log(calc);
     switch (calc.operator){
@@ -87,10 +52,77 @@ function operate(){
     }
     calc.r_Op = "";
     calc.display = result;
+    calc.l_Op = result;
     return result;
 }
 
-let btns = Array.from(document.querySelectorAll(".calcbutton"));
-btns.forEach(btn => {
-    btn.addEventListener('click', updateHelper);
+function numericHelper(e){
+    if(right_op_trigger){
+        calc.r_Op += this.value;
+        calc.display = calc.r_Op;
+        display_text.textContent = calc.display;
+        return;
+    }
+    calc.l_Op += this.value;
+    calc.display = calc.l_Op;
+    display_text.textContent = calc.display;
+    return;
+}
+
+function clearHelper(e){
+    calc.display = "";
+    calc.l_Op = "";
+    calc.r_Op = "";
+    calc.operator = "";
+    calc.history = "";
+    display_text.textContent  = calc.display;
+    right_op_trigger = false;
+    return;
+}
+
+function operatorHelper(e) {
+    calc.display = "";
+    calc.operator = this.value;
+    right_op_trigger = true;
+    return;
+}
+
+function evalHelper(e) {
+    let result = evaluate();
+    display_text.textContent = result;
+}
+
+function switchSign(e) {
+    let res; 
+    if(right_op_trigger){
+        calc.r_Op = String(+calc.r_Op * -1);
+        res = calc.r_Op;
+    }
+    else{
+        calc.l_Op = String(+calc.l_Op * -1);
+        res = calc.l_Op;
+    }
+    display_text.textContent = res;
+}
+
+
+let numericbtns = Array.from(document.querySelectorAll(".numeric"));
+numericbtns.forEach(btn => {
+    btn.addEventListener('click', numericHelper);
 });
+
+let clearbtns = Array.from(document.querySelectorAll(".clear"));
+clearbtns.forEach(btn => {
+    btn.addEventListener('click', clearHelper);
+});
+
+let operator_btns = Array.from(document.querySelectorAll(".operator"));
+operator_btns.forEach(btn => {
+    btn.addEventListener('click', operatorHelper);
+});
+
+let evalbtn = document.querySelector(".evaluate");
+evalbtn.addEventListener('click', evalHelper);
+
+let neg_pos_btn = document.querySelector(".neg-pos");
+neg_pos_btn.addEventListener('click', switchSign);
