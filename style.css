@@ -17,12 +17,14 @@ h1 {
 .calculator{
     height: 65%;
     width: 25%;
-    background-color: azure;
+    background-color: rgb(39, 39, 39);
     display:flex;
     justify-content: center;
     align-items: flex-start;
     flex: 0 0 initial;
     flex-wrap: wrap;
+    border-style: outset;
+    border-radius: 5%;
 }
 
 .screen-container{
@@ -56,27 +58,34 @@ h1 {
 }
 
 .button-container {
-    height: 50%;
-    width: 100%;
-    display:flex;
-    flex-wrap: wrap;
-    justify-content: space-evenly;
-}
-
-.bottom-row{
-    height: 20%;
-    width: 100%;
-    display:flex;
-    justify-content: center;
-    align-content: center;
+    height:70%;
+    width:90%;
+    row-gap: 4%;
+    column-gap: 4%;
+    display:grid;
+    grid-template-columns: repeat(4, 1fr);
 }
 
 .calcbutton{
-    height: 19%;
-    width: 22%;
     padding: 0;
-    border-radius: 50%;
-    border-style: outset;
+    border-radius: 40%;
+    border-style: ridge;
+    border-width: 5%;
+} 
+
+.calcbutton.operator{
+    background-color: orangered;
+}
+
+.calcbutton.clear{
+    background-color: rgb(159, 207, 199);
+}
+
+.calcbutton.evaluate{
+    grid-row: 4 / 6;
+    grid-column: 4 / 5;
+    border-radius: 8%;
+    background-color: orangered;
 }
 
 .calcbutton:hover{
