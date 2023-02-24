@@ -1,16 +1,27 @@
-let div_zero = "I'm afraid I can't do that, user.";
+let div_zero = "Dividing by zero, huh?";
 let calc = {
     "l_Op": "",
     "r_Op": "",
     "operator": "",
     "display": "",
     "history": "",
+    "evalclear": false,
 }
 let right_op_trigger = false;
 let trigger_decimal = true;
 let display_text = document.querySelector("#display");
 
-//Notes for self, right_trigger is switched to true when an operator is pressed. 
+//Notes for self, right_trigger is switched to true when an operator is pressed.
+//What if a user presses a numeric button right after eval is run? 
+//Have a flag that changes when eval is run. If a numeric is pressed when the flag is true, clear everything.
+/*
+TO-DO 2-24-2023
+*What if a user presses a numeric button right after eval is run? *DONE!*
+*Rounding if numbers exceed a certain length.
+*Add fading animation for division by zero.
+*Backspace
+*Keyboard support
+*/
 
 
 function add(a,b){
@@ -27,6 +38,8 @@ function multiply(a,b){
 
 function divide(a,b) {
     if(b === 0){
+        //Change to picture fading in and out.
+        clearHelper();
         return div_zero;
     }
     return a/b;
@@ -55,10 +68,14 @@ function evaluate(){
     calc.display = result;
     calc.l_Op = result;
     trigger_decimal = true;
+    calc.evalclear = true;
     return result;
 }
 
 function numericHelper(e){
+    if(calc.evalclear === true){
+        clearHelper();
+    }
     if(right_op_trigger){
         calc.r_Op += this.value;
         calc.display = calc.r_Op;
@@ -72,6 +89,9 @@ function numericHelper(e){
 }
 
 function decimalHelper(e){
+    if(calc.evalclear === true){
+        clearHelper();
+    }
     if(!trigger_decimal){
         alert("cannot add another decimal to this operand");
         return;
@@ -89,7 +109,7 @@ function decimalHelper(e){
     return;
 }
 
-function clearHelper(e){
+function clearHelper(){
     calc.display = "";
     calc.l_Op = "";
     calc.r_Op = "";
@@ -97,6 +117,7 @@ function clearHelper(e){
     calc.history = "";
     display_text.textContent  = calc.display;
     right_op_trigger = false;
+    calc.evalclear = false;
     return;
 }
 
@@ -108,6 +129,9 @@ function operatorHelper(e) {
     calc.operator = this.value;
     right_op_trigger = true;
     trigger_decimal = true;
+    if(calc.evalclear === true){
+        calc.evalclear = false;
+    }
     return;
 }
 
