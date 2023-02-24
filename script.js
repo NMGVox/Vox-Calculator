@@ -7,6 +7,7 @@ let calc = {
     "history": "",
 }
 let right_op_trigger = false;
+let trigger_decimal = true;
 let display_text = document.querySelector("#display");
 
 //Notes for self, right_trigger is switched to true when an operator is pressed. 
@@ -53,6 +54,7 @@ function evaluate(){
     calc.r_Op = "";
     calc.display = result;
     calc.l_Op = result;
+    trigger_decimal = true;
     return result;
 }
 
@@ -69,6 +71,24 @@ function numericHelper(e){
     return;
 }
 
+function decimalHelper(e){
+    if(!trigger_decimal){
+        alert("cannot add another decimal to this operand");
+        return;
+    }
+    if(right_op_trigger){
+        calc.r_Op += this.value;
+        trigger_decimal = false;
+        display_text.textContent = calc.r_Op;
+    }
+    else{
+        calc.l_Op += this.value;
+        trigger_decimal = false;
+        display_text.textContent = calc.l_Op;
+    }
+    return;
+}
+
 function clearHelper(e){
     calc.display = "";
     calc.l_Op = "";
@@ -81,13 +101,23 @@ function clearHelper(e){
 }
 
 function operatorHelper(e) {
+    if (calc.operator && calc.r_Op){
+        display.textContent = evaluate();
+    }
     calc.display = "";
     calc.operator = this.value;
     right_op_trigger = true;
+    trigger_decimal = true;
     return;
 }
 
 function evalHelper(e) {
+    if(calc.r_Op === ""){
+        calc.l_Op === "" ? alert("please provide a lefthand operand") : 
+            calc.operator === "" ? alert("Please provide an operator"):
+                alert("Please provide a righthand operator");
+        return;
+    }
     let result = evaluate();
     display_text.textContent = result;
 }
@@ -126,3 +156,6 @@ evalbtn.addEventListener('click', evalHelper);
 
 let neg_pos_btn = document.querySelector(".neg-pos");
 neg_pos_btn.addEventListener('click', switchSign);
+
+let decimalbtn = document.querySelector(".decimal");
+decimalbtn.addEventListener('click', decimalHelper);
