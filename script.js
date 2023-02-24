@@ -4,12 +4,13 @@ let calc = {
     "r_Op": "",
     "operator": "",
     "display": "",
-    "history": "",
+    "history": [],
     "evalclear": false,
 }
 let right_op_trigger = false;
 let trigger_decimal = true;
 let display_text = document.querySelector("#display");
+let history_text = document.querySelector('#history');
 
 //Notes for self, right_trigger is switched to true when an operator is pressed.
 //What if a user presses a numeric button right after eval is run? 
@@ -45,6 +46,10 @@ function divide(a,b) {
     return a/b;
 }
 
+function updateHistory(){
+    history_text.textContent = calc.history.join(" ");
+}
+
 function evaluate(){
     let result;
     console.log(calc);
@@ -64,6 +69,8 @@ function evaluate(){
         default:
             return("Something went terribly wrong here.");
     }
+    calc.history.push(calc.r_Op);
+    updateHistory();
     calc.r_Op = "";
     calc.display = result;
     calc.l_Op = result;
@@ -114,7 +121,8 @@ function clearHelper(){
     calc.l_Op = "";
     calc.r_Op = "";
     calc.operator = "";
-    calc.history = "";
+    calc.history = [];
+    updateHistory();
     display_text.textContent  = calc.display;
     right_op_trigger = false;
     calc.evalclear = false;
@@ -125,8 +133,12 @@ function operatorHelper(e) {
     if (calc.operator && calc.r_Op){
         display.textContent = evaluate();
     }
+    calc.history.push(calc.l_Op);
+    updateHistory();
     calc.display = "";
     calc.operator = this.value;
+    calc.history.push(calc.operator);
+    updateHistory();
     right_op_trigger = true;
     trigger_decimal = true;
     if(calc.evalclear === true){
