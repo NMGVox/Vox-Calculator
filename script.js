@@ -19,8 +19,8 @@ let history_text = document.querySelector('#history');
 TO-DO 2-24-2023
 *What if a user presses a numeric button right after eval is run? *DONE!*
 *Rounding if numbers exceed a certain length.
-*Add fading animation for division by zero.
-*Backspace
+*Add fading animation for division by zero. *DONE!*
+*Backspace *DONE!*
 *Keyboard support
 */
 
@@ -40,10 +40,19 @@ function multiply(a,b){
 function divide(a,b) {
     if(b === 0){
         //Change to picture fading in and out.
+        let hal = document.querySelector(".hal");
+        hal.classList.add("halvisible");
         clearHelper();
-        return div_zero;
+        return;
     }
     return a/b;
+}
+
+function hidehal(e){
+    if (this.classList.contains("halvisible")){
+        this.classList.remove("halvisible");
+    }
+    return;
 }
 
 function updateHistory(){
@@ -217,3 +226,6 @@ decimalbtn.addEventListener('click', decimalHelper);
 
 let backbtn = document.querySelector(".backspace");
 backbtn.addEventListener('click', backspaceHelper);
+
+let halvis = document.querySelector(".hal");
+halvis.addEventListener('click', hidehal);
