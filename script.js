@@ -69,6 +69,7 @@ function evaluate(){
         default:
             return("Something went terribly wrong here.");
     }
+    calc.history.push(calc.operator);
     calc.history.push(calc.r_Op);
     updateHistory();
     calc.r_Op = "";
@@ -129,18 +130,37 @@ function clearHelper(){
     return;
 }
 
+//Backspace helper should only run on the left or right operand. If evalclear is enabled, don't clear the display text.
+function backspaceHelper(e){
+    if(calc.evalclear === true){
+        return;
+    }
+    if(right_op_trigger){
+        calc.r_Op = "";
+        calc.display = calc.r_Op;
+    }
+    else{
+        calc.l_Op = "";
+        calc.display = calc.l_Op;
+    }
+    display_text.textContent = calc.display;
+    return;
+}
+
+//Only allow an operator to be entered if a left operand exists. If both operands and an operator exists, evaluate the term. Only push a left operator to 
+//the history array if it is the FIRST left operator manually entered by the user.
 function operatorHelper(e) {
+    trigger_decimal = true;
     if (calc.operator && calc.r_Op){
         display.textContent = evaluate();
     }
-    calc.history.push(calc.l_Op);
-    updateHistory();
+    if(!right_op_trigger){
+        calc.history.push(calc.l_Op);
+        updateHistory();
+    }
+    right_op_trigger = true;
     calc.display = "";
     calc.operator = this.value;
-    calc.history.push(calc.operator);
-    updateHistory();
-    right_op_trigger = true;
-    trigger_decimal = true;
     if(calc.evalclear === true){
         calc.evalclear = false;
     }
@@ -154,8 +174,7 @@ function evalHelper(e) {
                 alert("Please provide a righthand operator");
         return;
     }
-    let result = evaluate();
-    display_text.textContent = result;
+    display_text.textContent = evaluate();
 }
 
 function switchSign(e) {
@@ -195,3 +214,6 @@ neg_pos_btn.addEventListener('click', switchSign);
 
 let decimalbtn = document.querySelector(".decimal");
 decimalbtn.addEventListener('click', decimalHelper);
+
+let backbtn = document.querySelector(".backspace");
+backbtn.addEventListener('click', backspaceHelper);
