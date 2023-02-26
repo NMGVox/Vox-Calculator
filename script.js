@@ -18,7 +18,7 @@ let history_text = document.querySelector('#history');
 /*
 TO-DO 2-24-2023
 *What if a user presses a numeric button right after eval is run? *DONE!*
-*Rounding if numbers exceed a certain length.
+*Rounding if numbers exceed a certain length. *DONE!*
 *Add fading animation for division by zero. *DONE!*
 *Backspace *DONE!*
 *Keyboard support
@@ -56,7 +56,13 @@ function hidehal(e){
 }
 
 function updateHistory(){
-    history_text.textContent = calc.history.join(" ");
+    let txt = calc.history.join(" ");
+    if (txt.length >= 40){
+        history_text.textContent = txt.substring((txt.length - 40));
+        return;
+    }
+    history_text.textContent = txt;
+    return;
 }
 
 function evaluate(){
@@ -86,12 +92,15 @@ function evaluate(){
     calc.l_Op = result;
     trigger_decimal = true;
     calc.evalclear = true;
-    return result;
+    return String(result);
 }
 
 function numericHelper(e){
     if(calc.evalclear === true){
         clearHelper();
+    }
+    if(calc.display.length >= 15){
+        return;
     }
     if(right_op_trigger){
         calc.r_Op += this.value;
@@ -108,6 +117,9 @@ function numericHelper(e){
 function decimalHelper(e){
     if(calc.evalclear === true){
         clearHelper();
+    }
+    if(calc.display.length = 15){
+        return;
     }
     if(!trigger_decimal){
         alert("cannot add another decimal to this operand");
@@ -183,7 +195,14 @@ function evalHelper(e) {
                 alert("Please provide a righthand operator");
         return;
     }
-    display_text.textContent = evaluate();
+    let result = evaluate();
+    if(result.length > 15){
+        let abbr = Number(result).toExponential(3);
+        display_text.textContent = abbr;
+        return;
+     }
+     display_text.textContent = result;
+     return;
 }
 
 function switchSign(e) {
