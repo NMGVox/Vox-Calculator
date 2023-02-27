@@ -96,6 +96,7 @@ function evaluate(){
 }
 
 function numericHelper(e){
+    let entry = e.key ? e.key : this.value;
     if(calc.evalclear === true){
         clearHelper();
     }
@@ -103,12 +104,12 @@ function numericHelper(e){
         return;
     }
     if(right_op_trigger){
-        calc.r_Op += this.value;
+        calc.r_Op += entry;
         calc.display = calc.r_Op;
         display_text.textContent = calc.display;
         return;
     }
-    calc.l_Op += this.value;
+    calc.l_Op += entry;
     calc.display = calc.l_Op;
     display_text.textContent = calc.display;
     return;
@@ -118,7 +119,7 @@ function decimalHelper(e){
     if(calc.evalclear === true){
         clearHelper();
     }
-    if(calc.display.length = 15){
+    if(calc.display.length >= 15){
         return;
     }
     if(!trigger_decimal){
@@ -126,12 +127,12 @@ function decimalHelper(e){
         return;
     }
     if(right_op_trigger){
-        calc.r_Op += this.value;
+        calc.r_Op += ".";
         trigger_decimal = false;
         display_text.textContent = calc.r_Op;
     }
     else{
-        calc.l_Op += this.value;
+        calc.l_Op += ".";
         trigger_decimal = false;
         display_text.textContent = calc.l_Op;
     }
@@ -171,6 +172,7 @@ function backspaceHelper(e){
 //Only allow an operator to be entered if a left operand exists. If both operands and an operator exists, evaluate the term. Only push a left operator to 
 //the history array if it is the FIRST left operator manually entered by the user.
 function operatorHelper(e) {
+    let entry = e.key ? e.key : this.value;
     trigger_decimal = true;
     if (calc.operator && calc.r_Op){
         display.textContent = evaluate();
@@ -181,7 +183,7 @@ function operatorHelper(e) {
     }
     right_op_trigger = true;
     calc.display = "";
-    calc.operator = this.value;
+    calc.operator = entry;
     if(calc.evalclear === true){
         calc.evalclear = false;
     }
@@ -218,6 +220,34 @@ function switchSign(e) {
     display_text.textContent = res;
 }
 
+function keyboardInput(e) {
+    console.log(e.keyCode);
+    switch(true){
+        case e.keyCode >= 96 && e.keyCode <= 105:
+            numericHelper(e);
+            return;
+        case (e.keyCode >= 106 && e.keyCode <= 109) || e.keyCode === 111:
+            operatorHelper(e);
+            return;
+        case e.keyCode === 110:
+            decimalHelper();
+            return;
+        case e.keyCode === 46:
+            clearHelper();
+            return;
+        case e.keyCode === 13:
+            evalHelper();
+            return;
+        case e.keyCode === 8:
+            backspaceHelper();
+            return;
+        case e.keyCode === 189:
+            switchSign();
+            return;
+    }
+    e.preventDefault();
+}
+
 
 let numericbtns = Array.from(document.querySelectorAll(".numeric"));
 numericbtns.forEach(btn => {
@@ -248,3 +278,5 @@ backbtn.addEventListener('click', backspaceHelper);
 
 let halvis = document.querySelector(".hal");
 halvis.addEventListener('click', hidehal);
+
+window.addEventListener('keydown', keyboardInput);

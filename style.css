@@ -5,19 +5,20 @@ body {
     flex-direction: column;
     margin:0;
     padding:0;
-    width:100vw;
+    min-height: fit-content;
     height:100vh;
-    background-color: honeydew;
+    background-color: #CAE9FF;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
 h1 {
-    font-size: 4rem;
+    font-size: 3rem;
 }
 
 .calculator{
-    height: 65%;
+    height: 70%;
     width: 25%;
-    background-color: rgb(39, 39, 39);
+    background-color: #1B1B1B;
     display:flex;
     justify-content: center;
     align-items: flex-start;
@@ -36,7 +37,7 @@ h1 {
 .screen {
     height: 100%;
     width: 100%;
-    background-color: gainsboro;
+    background-color: rgb(201, 207, 199);
     /* flex-wrap: wrap; */
     text-align:right;
     border-style: inset;
@@ -73,26 +74,32 @@ h1 {
     border-radius: 40%;
     border-style: outset;
     border-width: 5%;
+    background-color: #f0efef;
+    font-weight: bolder;
 } 
 
 .calcbutton.operator{
-    background-color: orangered;
+    background-color: #FE654F;
 }
 
 .calcbutton.clear{
-    background-color: rgb(159, 207, 199);
+    background-color: #BEE9E8;
+}
+
+.calcbutton.backspace{
+    background-color: #BEE9E8;
 }
 
 .calcbutton.evaluate{
     grid-row: 4 / 6;
     grid-column: 4 / 5;
     border-radius: 8%;
-    background-color: orangered;
+    background-color: #FE654F;
 }
 
 
 .calcbutton:hover{
-    background-color: beige;
+    background-color: #28965A;
 }
 
 .hal{
@@ -110,3 +117,13 @@ h1 {
     width: auto;
 }
 
+.bottom-text {
+    font-weight: lighter;
+    font-size: 0.9rem;
+    text-decoration: none;
+}
+
+.github-logo{
+    height: 1rem;
+    width:auto;
+}
